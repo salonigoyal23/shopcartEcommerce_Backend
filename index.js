@@ -80,64 +80,12 @@ app.post('/login', async(req, res) => {
     }
 })
 
-app.post('/notices', authJWT, async(req, res) => {
-    try{
-        const notice = new Notice({
-            title: req.body.title,
-            body: req.body.body,
-            category: req.body.category,
-            date : req.body.date
-        })
-        await notice.save();
-        res.status(200).json({message: "Notice created successfully"});
-    }
-    catch(error) {
-        res.status(500).json({message: "Error"});
-    }
-})
-
-app.get('/notices', authJWT, async(req, res) => {
+app.get('/products', async(req, res) => {
     try{
         const filterData = req.query.category ? {category: req.query.category} : {};
         const notices = await Notice.find({...filterData});
         res.json(notices);
     } 
-    catch(error) {
-        res.status(500).json({message: "Error"});
-    }
-})
-
-app.put('/notices/:id', authJWT, async(req, res) => {
-    try{
-        const notice = await Notice.findOne({_id: req.params.id});
-        if( !notice ) {
-            res.status(400).json({message: "Notice not found"});
-        }
-        else {
-            notice.title = req.body.title;
-            notice.body = req.body.body;
-            notice.category= req.body.category;
-            notice.date= req.body.date;
-            await notice.save();
-            res.status(200).json({message: "Notice updated successfully"})
-        }
-    }
-    catch(error) {
-        res.status(500).json({message: "Error"});
-    }
-})
-
-app.delete('/notices/:id', authJWT, async(req, res) => {
-    try{
-        const notice = await Notice.findOne({_id: req.params.id});
-        if( !notice ) {
-            res.status(400).json({message: "Notice not found"});
-        }
-        else {
-            await notice.deleteOne();
-            res.status(200).json({message: "Notice deleted successfully"})
-        }
-    }
     catch(error) {
         res.status(500).json({message: "Error"});
     }
